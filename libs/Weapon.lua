@@ -71,6 +71,7 @@ function Weapon:switchTo(weaponName)
     self.distanceFromHero = WeaponCatalog[weaponName].distanceFromHero
     self.maxBulletDistance = WeaponCatalog[weaponName].maxBulletDistance
     self.bulletImage = WeaponCatalog[weaponName].bulletImage
+    self.damage = WeaponCatalog[weaponName].damage
 end
 
 return Weapon

@@ -8,11 +8,13 @@ love.graphics.setDefaultFilter("nearest")
 local StateManager = require("states.StateManager")
 local StartMenu = require("states.StartMenu")
 local Gameplay = require("states.Gameplay")
+local EndGame = require("states.EndGame")
 
 
 function love.load()
     StateManager:addState("StartMenu", StartMenu)
     StateManager:addState("Gameplay", Gameplay)
+    StateManager:addState("EndGame", EndGame)
     StateManager:switchTo("StartMenu")
     local cursor = love.mouse.newCursor("assets/sprites/Crosshair.png")
     love.mouse.setCursor(cursor)

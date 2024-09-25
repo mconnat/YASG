@@ -1,7 +1,7 @@
 local Character = require("libs.Character")
-local StateManager = require("states.StateManager")
 local Enemy = require("libs.Enemy")
 local Boss = require("libs.Boss")
+local GameLoopManager = require("libs.GameLoopManager")
 
 local Gameplay = {}
 
@@ -9,19 +9,18 @@ local Gameplay = {}
 local Hero = nil
 local Enemies = {}
 
+
 function Gameplay:enter()
-    print("Entering Gameplay")
+    GameLoopManager:reset()
     if Hero == nil then
         Hero = Character:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
     end
-
-    table.insert(Enemies, Enemy:new(100, 200))
-    table.insert(Enemies, Enemy:new(200, 100))
-    table.insert(Enemies, Enemy:new(500, 200))
-    table.insert(Enemies, Boss:new(100, 500))
+    GameLoopManager:init(Hero)
 end
 
 function Gameplay:exit()
+    Enemies = {}
+    Hero = nil
     print("Exiting Gameplay")
 end
 
@@ -43,18 +42,37 @@ function Gameplay:update(dt)
             Hero.weapon.projectiles[bulletIndex]:update(Enemies, bulletIndex)
         end
     end
+    if #Enemies < 50 then
+        while #Enemies ~= 50 do
+            table.insert(Enemies,
+                Enemy:new())
+        end
+    end
+    if GameLoopManager.score % 50 == 0 and GameLoopManager.canSpawnBoss and GameLoopManager.score ~= 0 then
+        table.insert(Enemies, Boss:new())
+        table.insert(Enemies, Boss:new())
+        GameLoopManager.canSpawnBoss = false
+    end
+    if GameLoopManager.score % 50 ~= 0 then
+        GameLoopManager.canSpawnBoss = true
+    end
+    for i = 1, #Enemies do
+        Enemies[i]:update(dt, Hero)
+    end
+    Hero:checkCollision(Enemies)
+
+    GameLoopManager:update(Hero)
 end
 
 function Gameplay:draw()
     love.graphics.clear(1, 1, 1)
     love.graphics.setColor(1, 1, 1)
-
-    Hero:draw()
-    -- Hero.weapon:draw()
-
     for _, enemy in ipairs(Enemies) do
         enemy:draw()
     end
+    Hero:draw()
+
+
     if CONFIG.debug then
         local r, g, b, a = love.graphics.getColor()
         love.graphics.setColor(0.2, 0.8, 0.1)
@@ -62,6 +80,9 @@ function Gameplay:draw()
         Hero:drawCenter()
         love.graphics.setColor(r, g, b, a)
     end
+    love.graphics.setColor(0, 0, 0.1)
+    love.graphics.print(GameLoopManager.score, 10, 10)
+    love.graphics.setColor(1, 1, 1)
 end
 
 return Gameplay
