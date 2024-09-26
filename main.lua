@@ -5,10 +5,10 @@ end
 love.graphics.setDefaultFilter("nearest")
 
 
-local StateManager = require("states.StateManager")
-local StartMenu = require("states.StartMenu")
-local Gameplay = require("states.Gameplay")
-local EndGame = require("states.EndGame")
+local StateManager = require("states.state_manager")
+local StartMenu = require("states.start_menu")
+local Gameplay = require("states.gameplay")
+local EndGame = require("states.end_game")
 
 
 function love.load()

@@ -1,6 +1,6 @@
 local FontManager = require("libs.fonts")
 local GodMod = require("libs.godmod")
-local StateManager = require("states.StateManager")
+local StateManager = require("states.state_manager")
 
 local StartMenu = {}
 

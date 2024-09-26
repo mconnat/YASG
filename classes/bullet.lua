@@ -25,15 +25,13 @@ function Bullet:new(mouseX, mouseY, weapon)
 end
 
 function Bullet:drawHitbox()
-    local r, g, b, a = love.graphics.getColor()
-    love.graphics.setColor(0.2, 0.8, 0.1)
     love.graphics.push()
+    love.graphics.setColor(0.2, 0.8, 0.1)
     love.graphics.translate(self.x, self.y)
     love.graphics.rotate(self.angle)
     love.graphics.rectangle("line", -self.image:getWidth() / 2, -self.image:getHeight() / 2, self.image:getWidth(),
         self.image:getHeight())
     love.graphics.pop()
-    love.graphics.setColor(r, g, b, a)
 end
 
 function Bullet:update(enemies, bulletIndex)

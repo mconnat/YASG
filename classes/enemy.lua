@@ -1,5 +1,5 @@
-local Character = require("libs.Character")
-local GameLoopManager = require("libs.GameLoopManager")
+local Character = require("classes.character")
+local GameplayManager = require("modules.gameplay")
 
 local Enemy = {}
 setmetatable(Enemy, { __index = Character })
@@ -7,20 +7,22 @@ setmetatable(Enemy, { __index = Character })
 function Enemy:new()
     local instance = Character:new(0, 0)
     setmetatable(instance, { __index = Enemy })
-    local image = love.graphics.newImage("assets/sprites/Enemy.png")
-    instance.weapon = nil
-    instance.healthPoint = 5
+
+    instance.currentHealthPoint = 5
     instance.maxHealthPoint = 5
     instance.speed = 30
-    instance.image = image
-    instance.radius = image:getWidth() / 2
-    instance:findStartPosition()
+    instance.image = love.graphics.newImage("assets/sprites/Enemy.png")
+    instance.radius = instance.image:getWidth() / 2
+    instance:randomizeStartPosition()
     return instance
 end
 
 function Enemy:update(dt, player)
     -- Get angle of the character
     self.angle = math.atan2(player.y - self.y, player.x - self.x)
+    -- Compute distance between player center and enemy center then
+    -- Make the enemy move forward the player according to the speed
+    -- If the enemy enter the radius of the player, deny next mouvement
     -- https://love2d.org/forums/viewtopic.php?p=217897#p217897
     local enemyDirectionX = player.x - self.x
     local enemyDirectionY = player.y - self.y
@@ -31,7 +33,7 @@ function Enemy:update(dt, player)
     end
 end
 
-function Enemy:findStartPosition()
+function Enemy:randomizeStartPosition()
     local DisplayWidth = love.graphics.getWidth()
     local DisplayHeight = love.graphics.getHeight()
     local randomScreenSide = love.math.random(1, 4)
@@ -51,15 +53,15 @@ function Enemy:findStartPosition()
 end
 
 function Enemy:onHit(enemies, enemyIndex, damage)
-    self.healthPoint = self.healthPoint - damage
+    self.currentHealthPoint = self.currentHealthPoint - damage
     self.hit = true
-    if self.healthPoint <= 0 then
+    if self.currentHealthPoint <= 0 then
         self:Destroy(enemies, enemyIndex)
     end
 end
 
 function Enemy:Destroy(enemies, enemyIndex)
-    GameLoopManager.score = GameLoopManager.score + 1
+    GameplayManager.score = GameplayManager.score + 1
     table.remove(enemies, enemyIndex)
 end
 

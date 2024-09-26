@@ -1,5 +1,5 @@
-local StateManager = require("states.StateManager")
-local GameLoopManager = require("libs.GameLoopManager")
+local StateManager = require("states.state_manager")
+local GameplayManager = require("modules.gameplay")
 local FontManager = require("libs.fonts")
 
 local EndGame = {}
@@ -19,7 +19,7 @@ EndGame.backToMenu.height = 0
 EndGame.backToMenu.hover = false
 
 function EndGame:enter()
-    if GameLoopManager.score >= GameLoopManager.maxScore then
+    if GameplayManager.score >= GameplayManager.maxScore then
         EndGame.status.text = "You Win"
     else
         EndGame.status.text = "You Loose"

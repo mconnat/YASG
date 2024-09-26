@@ -15,6 +15,8 @@ function Utils.CircleAndRectangleOverlap(cx, cy, cr, rx, ry, rw, rh)
     return (math.pow(circle_distance_x - rw / 2, 2) + math.pow(circle_distance_y - rh / 2, 2)) <= math.pow(cr, 2)
 end
 
+-- Check Distance between the 2 cricle's center
+-- If the distance is less than the radii, it means they are overlapping
 function Utils.CircleCollision(circleA, circleB)
     local dist = math.sqrt((circleA.x - circleB.x) ^ 2 + (circleA.y - circleB.y) ^ 2)
     return dist <= circleA.radius + circleB.radius

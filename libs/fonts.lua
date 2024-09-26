@@ -1,6 +1,7 @@
 local FontManager = {}
 FontManager.fontFile = "assets/fonts/Harvest Yard.otf"
 FontManager.defaultFontSize = 25
+FontManager.Font = love.graphics.newFont(FontManager.fontFile, FontManager.defaultFontSize)
 
 ---@param size number font size value in pixels
 function FontManager:setFontSize(size)

@@ -1,10 +1,10 @@
 require("libs.table")
-Bullet = require("libs.Bullet")
+Bullet = require("classes.bullet")
 
 local Weapon = {}
 
 WeaponCatalog = {
-    Shotgun = {
+    {
         name = "Shotgun",
         image = love.graphics.newImage("assets/sprites/Shotgun.png"),
         bulletImage = love.graphics.newImage("assets/sprites/DoubleBullet.png"),
@@ -12,7 +12,7 @@ WeaponCatalog = {
         maxBulletDistance = 150,
         damage = 2
     },
-    Pistol = {
+    {
         name = "Pistol",
         image = love.graphics.newImage("assets/sprites/Pistol.png"),
         bulletImage = love.graphics.newImage("assets/sprites/Bullet.png"),
@@ -22,15 +22,13 @@ WeaponCatalog = {
     }
 }
 
-function Weapon:new(weaponName, parent)
-    local instance = {}
-    setmetatable(instance, { __index = Weapon })
-    instance.x = 0
-    instance.y = 0
-    instance.parent = parent
-    instance.projectiles = {}
-    instance = table.merge(instance, WeaponCatalog[weaponName])
-    return instance
+function Weapon:init(weaponName, parent)
+    setmetatable(self, { __index = Weapon })
+    self.x = 0
+    self.y = 0
+    self.parent = parent
+    self.projectiles = {}
+    self = table.merge(self, WeaponCatalog[1])
 end
 
 function Weapon:addProjectile(mouseX, mouseY)
@@ -60,18 +58,23 @@ function Weapon:draw()
         if math.abs(bullet.originalX - bullet.x) < bullet.distance and math.abs(bullet.originalY - bullet.y) < bullet.distance then
             bullet:draw()
         else
-            table.remove(self.projectiles, index)
+            bullet:Destroy(index)
         end
     end
 end
 
-function Weapon:switchTo(weaponName)
-    self.name = WeaponCatalog[weaponName].name
-    self.image = WeaponCatalog[weaponName].image
-    self.distanceFromHero = WeaponCatalog[weaponName].distanceFromHero
-    self.maxBulletDistance = WeaponCatalog[weaponName].maxBulletDistance
-    self.bulletImage = WeaponCatalog[weaponName].bulletImage
-    self.damage = WeaponCatalog[weaponName].damage
+function Weapon:switchWeapon()
+    local weaponIndex = 1
+    for i = 1, #WeaponCatalog do
+        if WeaponCatalog[i].name == self.name then
+            weaponIndex = i
+        end
+    end
+    if weaponIndex == #WeaponCatalog then
+        self = table.merge(self, WeaponCatalog[1])
+    else
+        self = table.merge(self, WeaponCatalog[weaponIndex + 1])
+    end
 end
 
 return Weapon
