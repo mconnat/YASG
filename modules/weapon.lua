@@ -1,26 +1,8 @@
 require("libs.table")
 Bullet = require("classes.bullet")
-
+WeaponCatalog = require("modules.weapon_catalog")
 local Weapon = {}
 
-WeaponCatalog = {
-    {
-        name = "Shotgun",
-        image = love.graphics.newImage("assets/sprites/Shotgun.png"),
-        bulletImage = love.graphics.newImage("assets/sprites/DoubleBullet.png"),
-        distanceFromHero = 40,
-        maxBulletDistance = 150,
-        damage = 2
-    },
-    {
-        name = "Pistol",
-        image = love.graphics.newImage("assets/sprites/Pistol.png"),
-        bulletImage = love.graphics.newImage("assets/sprites/Bullet.png"),
-        distanceFromHero = 40,
-        maxBulletDistance = 300,
-        damage = 1
-    }
-}
 
 function Weapon:init(weaponName, parent)
     setmetatable(self, { __index = Weapon })
@@ -31,8 +13,8 @@ function Weapon:init(weaponName, parent)
     self = table.merge(self, WeaponCatalog[1])
 end
 
-function Weapon:addProjectile(mouseX, mouseY)
-    local newBullet = Bullet:new(mouseX, mouseY, self)
+function Weapon:addProjectile(mouseX, mouseY, bonusDamageCount)
+    local newBullet = Bullet:new(mouseX, mouseY, self, bonusDamageCount)
     table.insert(self.projectiles, newBullet)
 end
 
@@ -65,15 +47,21 @@ end
 
 function Weapon:switchWeapon()
     local weaponIndex = 1
+    local tmpCatalog = {}
     for i = 1, #WeaponCatalog do
-        if WeaponCatalog[i].name == self.name then
+        if WeaponCatalog[i].unlocked then
+            table.insert(tmpCatalog, WeaponCatalog[i])
+        end
+    end
+    for i = 1, #tmpCatalog do
+        if tmpCatalog[i].name == self.name then
             weaponIndex = i
         end
     end
-    if weaponIndex == #WeaponCatalog then
-        self = table.merge(self, WeaponCatalog[1])
+    if weaponIndex == #tmpCatalog then
+        self = table.merge(self, tmpCatalog[1])
     else
-        self = table.merge(self, WeaponCatalog[weaponIndex + 1])
+        self = table.merge(self, tmpCatalog[weaponIndex + 1])
     end
 end
 

@@ -2,39 +2,66 @@ local Character = require("classes.character")
 local Enemy = require("classes.enemy")
 local Boss = require("classes.boss")
 local Hero = require("modules.hero")
-local GameplayManager = require("modules.gameplay")
+local GameplayManager = require("modules.gameplay_manager")
 local GuiManager = require("modules.gui_manager")
-local FontManager = require("libs.fonts")
+local BonusManager = require("modules.bonus_manager")
 
 
 local Gameplay = {}
 
 
 local Enemies = {}
-local HUDGroup = {}
-local panel = GuiManager.newPanel(5, 5, love.graphics.getWidth() - 10, 50)
-local font = FontManager.Font
-local scoreText = GuiManager.newText(
-    panel.x + 20,
-    panel.y + 10, 70, 40,
-    "Enemies: " .. tostring(GameplayManager.score) .. " over " .. tostring(GameplayManager.maxScore),
-    font
+local HUD = GuiManager.newGroup()
+local HUDScorePanel = GuiManager.newText(50,
+    30,
+    100,
+    50,
+    "",
+    love.graphics.newFont("assets/fonts/Harvest Yard.otf", 25),
+    nil,
+    nil,
+    { r = 0, g = 0, b = 0, a = 1 })
+HUD:addElement(HUDScorePanel)
+
+local HUDselectedWeaponCase = GuiManager.newPanel(love.graphics.getWidth() / 3 - 2, 30, 37, 37)
+HUDselectedWeaponCase:setColor({ r = 0, g = 0, b = 0, a = 1 })
+HUDselectedWeaponCase:setMode("line")
+HUD:addElement(HUDselectedWeaponCase)
+
+local HUDselectedWeapon = GuiManager.newPanel(love.graphics.getWidth() / 3, 30)
+HUDselectedWeapon:setImage(love.graphics.newImage("assets/sprites/Pistol.png"), 2)
+HUD:addElement(HUDselectedWeapon)
+
+
+local HUDbonusCase = GuiManager.newPanel(love.graphics.getWidth() / 2 + 50 - 2, 30, 37, 37)
+HUDbonusCase:setColor({ r = 0, g = 0, b = 0, a = 1 })
+HUDbonusCase:setMode("line")
+HUD:addElement(HUDbonusCase)
+
+local HUDbonusLogo = GuiManager.newPanel(love.graphics.getWidth() / 2 + 50, 32)
+HUDbonusLogo:setImage(love.graphics.newImage("assets/sprites/Bonus_damage.png"))
+HUD:addElement(HUDbonusLogo)
+
+local HUDbonusCount = GuiManager.newText(love.graphics.getWidth() / 2 + 50 + 50,
+    32,
+    100,
+    50,
+    "x 0",
+    love.graphics.newFont("assets/fonts/Harvest Yard.otf", 25),
+    nil,
+    nil,
+    { r = 0, g = 0, b = 0, a = 1 }
 )
-local selectedWeapon = {}
+HUD:addElement(HUDbonusCount)
+
 
 function Gameplay:enter()
     GameplayManager:reset()
 
     Hero:init(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    table.dump(Hero)
+
 
     GameplayManager:init(Hero)
-
-    HUDGroup = GuiManager.newGroup()
-    selectedWeapon = GuiManager.newPanel(panel.width / 2, panel.height / 2, Hero.weapon.image)
-    HUDGroup:addElement(panel)
-    HUDGroup:addElement(scoreText)
-    HUDGroup:addElement(selectedWeapon)
 end
 
 function Gameplay:exit()
@@ -43,7 +70,7 @@ end
 
 function Gameplay:mousepressed(x, y, button)
     if button == 1 then
-        Hero.weapon:addProjectile(x, y)
+        Hero.weapon:addProjectile(x, y, Hero.damageBonusCount)
     end
     if button == 2 then
         Hero.weapon:switchWeapon()
@@ -55,17 +82,8 @@ function Gameplay:keypressed(key, scancode, isrepeat)
 end
 
 function Gameplay:update(dt)
+    -- Refresh Enemies numbers
     GameplayManager.currentEnemyNumber = #Enemies
-
-    Hero:update(dt)
-    Hero.weapon:update(dt)
-    for bulletIndex = #Hero.weapon.projectiles, 1, -1 do
-        Hero.weapon.projectiles[bulletIndex]:update(Enemies, bulletIndex)
-    end
-
-    scoreText.text = "Enemies: " ..
-        tostring(GameplayManager.score) .. " over " .. tostring(GameplayManager.maxScore)
-    selectedWeapon:setImage(Hero.weapon.image)
     if GameplayManager.currentEnemyNumber < GameplayManager.maxEnemyNumber then
         while GameplayManager.currentEnemyNumber ~= GameplayManager.maxEnemyNumber do
             GameplayManager.currentEnemyNumber = #Enemies
@@ -81,26 +99,41 @@ function Gameplay:update(dt)
     if GameplayManager.score % GameplayManager.spawnBossKillThreshold ~= 0 then
         GameplayManager.canSpawnBoss = true
     end
+
+    -- Update Hero and his weapon
+    Hero:update(dt, Enemies)
+
+    -- Manage Bonus collision
+    BonusManager:update()
+
+    -- Update Bullets
+    for bulletIndex = #Hero.weapon.projectiles, 1, -1 do
+        Hero.weapon.projectiles[bulletIndex]:update(Enemies, bulletIndex)
+    end
+
     for i = 1, #Enemies do
         Enemies[i]:update(dt, Hero)
     end
-    Hero:checkCollision(Enemies)
+
 
     GameplayManager:update(Hero)
+    HUDScorePanel.text = GameplayManager.score .. " over " .. GameplayManager.maxScore
+    HUDbonusCount.text = "x " .. BonusManager.DamageBonusCount
+    HUDselectedWeapon:setImage(Hero.weapon.image, 2)
 end
 
 function Gameplay:draw()
     love.graphics.clear(1, 1, 1)
     love.graphics.setColor(1, 1, 1)
+    for _, bonus in ipairs(BonusManager.BonusPool) do
+        bonus:draw()
+    end
     for _, enemy in ipairs(Enemies) do
         enemy:draw()
     end
     Hero:draw()
+    HUD:draw()
 
-    HUDGroup:draw()
-
-    -- love.graphics.setColor(0, 0, 0.1)
-    -- love.graphics.print(GameplayManager.score, 10, 10)
     love.graphics.setColor(1, 1, 1)
 end
 

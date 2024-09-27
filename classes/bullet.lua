@@ -2,7 +2,7 @@ Utils = require("libs.utils")
 
 local Bullet = {}
 
-function Bullet:new(mouseX, mouseY, weapon)
+function Bullet:new(mouseX, mouseY, weapon, bonusDamageCount)
     local instance = {}
     setmetatable(instance, { __index = Bullet })
     local angle = math.atan2(mouseY - weapon.parent.y, mouseX - weapon.parent.x)
@@ -16,7 +16,7 @@ function Bullet:new(mouseX, mouseY, weapon)
     instance.image = weapon.bulletImage
     instance.scale = 1
     instance.speed = 200
-    instance.damage = weapon.damage
+    instance.damage = weapon.damage + bonusDamageCount
     instance.width = weapon.bulletImage:getWidth()
     instance.height = weapon.bulletImage:getHeight()
     instance.parent = weapon

@@ -23,10 +23,15 @@ function Hero:init(x, y)
     Hero.maxHealthPoint = 10
     Hero.canBeHit = true
     Hero.accumulatedInvincibilityTime = 0
-    Hero.weapon:init("Pistol", Hero)
+    Hero.damageBonusCount = 0
+    Hero.weapon:init(1, Hero)
 end
 
-function Hero:update(dt)
+function Hero:setBonusDamage(bonusCount)
+    self.damageBonusCount = bonusCount
+end
+
+function Hero:update(dt, enemies)
     local mouseX, mouseY = love.mouse.getPosition()
     -- Get angle of the character according to mouse position
     self.angle = math.atan2(mouseY - self.y, mouseX - self.x)
@@ -60,6 +65,12 @@ function Hero:update(dt)
     elseif self.y + self.radius >= love.graphics.getHeight() then
         self.y = love.graphics.getHeight() - self.radius
     end
+
+    -- Check collision with enemies
+    self:checkCollision(enemies)
+
+    -- update Hero's weapon
+    self.weapon:update(dt)
 
     -- Check if the Hero has been hit in the previous 2 second
     -- if yes, stay invulnerable

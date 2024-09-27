@@ -1,5 +1,5 @@
 local StateManager = require("states.state_manager")
-local GameplayManager = require("modules.gameplay")
+local GameplayManager = require("modules.gameplay_manager")
 local FontManager = require("libs.fonts")
 
 local EndGame = {}

@@ -1,5 +1,5 @@
 local Character = require("classes.character")
-local GameplayManager = require("modules.gameplay")
+local GameplayManager = require("modules.gameplay_manager")
 
 local Enemy = {}
 setmetatable(Enemy, { __index = Character })
