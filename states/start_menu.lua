@@ -77,11 +77,12 @@ local function onPanelHover(pState, obj)
     end
 end
 
-local function exitGame()
+local function exitGame(pState)
     love.event.quit(0)
 end
 
-local function startGame()
+local function startGame(pState, btn)
+    btn.isPressed = false
     StateManager:switchTo("Gameplay")
 end
 
@@ -155,9 +156,7 @@ function StartMenu:update(dt)
 end
 
 function StartMenu:mousepressed(mouseX, mouseY, mouseButton)
-    if mouseButton == 1 then
 
-    end
 end
 
 function StartMenu:keypressed(key, scancode, isrepeat)

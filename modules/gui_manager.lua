@@ -232,7 +232,7 @@ function GuiManager.newButton(pX, pY, pW, pH, pText, pFont, pColor)
             self.oldButtonState == false then
             self.isPressed = true
             if self.lstEvents["pressed"] ~= nil then
-                self.lstEvents["pressed"]("begin")
+                self.lstEvents["pressed"]("begin", self)
             end
         else
             if self.isPressed == true and love.mouse.isDown(1) == false then
