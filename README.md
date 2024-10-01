@@ -4,7 +4,7 @@
 This is a student project made with Love2D
 
 ## Demo
-![](https://github.com/mconnat/picross/docs/demo.gif)
+![](./docs/demo.gif)
 
 
 
