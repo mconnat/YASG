@@ -41,16 +41,16 @@ function Hero:update(dt, enemies)
     self.weapon.y = (self.weapon.distanceFromHero * math.sin(self.angle)) + self.weapon.parent.y
 
     -- Manage keyboard deplacement inputs
-    if love.keyboard.isScancodeDown("d") then
+    if love.keyboard.isDown("d") or love.keyboard.isDown("right") then
         self.x = self.x + (self.speed * dt)
     end
-    if love.keyboard.isScancodeDown("a") then
+    if love.keyboard.isDown("a") or love.keyboard.isDown("q") or love.keyboard.isDown("left") then
         self.x = self.x - (self.speed * dt)
     end
-    if love.keyboard.isScancodeDown("w") then
+    if love.keyboard.isDown("w") or love.keyboard.isDown("z") or love.keyboard.isDown("up") then
         self.y = self.y - (self.speed * dt)
     end
-    if love.keyboard.isScancodeDown("s") then
+    if love.keyboard.isDown("s") or love.keyboard.isDown("down") then
         self.y = self.y + (self.speed * dt)
     end
 
