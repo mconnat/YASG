@@ -1,9 +1,8 @@
-name: Testing[main]
+name: Build
 on:
   push:
     branches: [ main ]
 jobs:
-  # Build the Hello World test application
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -12,12 +11,13 @@ jobs:
         love_version: ['11.5']
     steps:
     - uses: actions/checkout@v4.1.7
-    - uses: nhartland/love-build@master
+    - uses: mconnat/love-build@master
       id: love-build
       with:
         app_name: 'yasg'
         love_version: ${{ matrix.love_version }}
         source_dir: '.'
+        result_dir: 'builds'
     # Upload the resulting artifacts
     - uses: actions/upload-artifact@v4
       with:
@@ -35,3 +35,7 @@ jobs:
       with:
         name: love-build
         path: ${{ steps.love-build.outputs.love-filename }}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: web-build
+        path: ${{ steps.love-build.outputs.web-filename }}
