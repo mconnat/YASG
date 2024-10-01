@@ -46,7 +46,7 @@ end
 function GameplayManager:update(Hero)
     GameplayManager.currentHealthPoint = Hero.currentHealthPoint
 
-    if GameplayManager.currentHealthPoint <= 0 or GameplayManager.score == GameplayManager.maxScore then
+    if GameplayManager.currentHealthPoint <= 0 or GameplayManager.score >= GameplayManager.maxScore then
         StateManager:switchTo("EndGame")
     end
 end
