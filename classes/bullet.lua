@@ -44,12 +44,15 @@ function Bullet:update(enemies, bulletIndex)
 end
 
 function Bullet:draw()
+    love.graphics.push()
+    love.graphics.setColor(1, 1, 1)
     love.graphics.draw(self.image, self.x, self.y, self.angle, self.scale, self.scale,
         self.image:getWidth() / 2,
         self.image:getHeight() / 2)
     if CONFIG.debug then
         self:drawHitbox()
     end
+    love.graphics.pop()
 end
 
 function Bullet:Destroy(index)
