@@ -1,4 +1,5 @@
 # YASG
+### Yet Another Survivor Game
 
 This is a student project made with Love2D
 
