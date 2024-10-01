@@ -1,7 +1,6 @@
 CONFIG = {}
 
 function love.conf(t)
-    t.version = "11.5"                        -- The LÖVE version this game was made for (string)
     t.window.title = "YASG"
     t.window.icon = "assets/sprites/Hero.png" -- Filepath to an image to use as the windows icon (string)
     t.window.width = 1280                     -- The window width (number)
