@@ -11,10 +11,22 @@ function Enemy:new()
     instance.currentHealthPoint = 5
     instance.maxHealthPoint = 5
     instance.speed = 30
+    instance.runSpeed = 120
     instance.image = love.graphics.newImage("assets/sprites/Enemy.png")
     instance.radius = instance.image:getWidth() / 2
+    instance.state = "WALK"
     instance:randomizeStartPosition()
     return instance
+end
+
+function Enemy:defineState(distance)
+    if distance > self.radius * 2 and distance < self.radius * 6 and self.state ~= "RUN" then
+        self.state = "RUN"
+    elseif distance > self.radius * 6 then
+        self.state = "WALK"
+    else
+        self.state = "IDLE"
+    end
 end
 
 function Enemy:update(dt, player)
@@ -27,9 +39,15 @@ function Enemy:update(dt, player)
     local enemyDirectionX = player.x - self.x
     local enemyDirectionY = player.y - self.y
     local distance = math.sqrt(enemyDirectionX * enemyDirectionX + enemyDirectionY * enemyDirectionY)
-    if distance > self.radius * 2 then
+
+    self:defineState(distance)
+
+    if self.state == "WALK" then
         self.x = self.x + enemyDirectionX / distance * self.speed * dt
         self.y = self.y + enemyDirectionY / distance * self.speed * dt
+    elseif self.state == "RUN" then
+        self.x = self.x + enemyDirectionX / distance * self.runSpeed * dt
+        self.y = self.y + enemyDirectionY / distance * self.runSpeed * dt
     end
 end
 
