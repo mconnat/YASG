@@ -10,7 +10,7 @@ My character is a Hero with a gun
 
 My enemies are bandits:
     - regular bandits
-    - boss bandit
+    - boss
     - can drop bonuses
 
 The decor is blank
@@ -32,8 +32,10 @@ I win if i reach 100 kills
 I loose if my health point drop to zero
 
 ## Demo
-![](./docs/demo.gif)
 
+Playable browser version available on [itch.io](https://sereal.itch.io/yasg)
+
+![](./docs/demo.gif)
 
 
 ## Evaluation Criteria
