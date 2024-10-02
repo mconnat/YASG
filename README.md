@@ -9,23 +9,23 @@ My game is named Yet Another Survivor Game
 My character is a Hero with a gun
 
 My enemies are bandits:
-    - regular bandits
-    - boss
-    - can drop bonuses
+- regular bandits
+- boss
+- can drop bonuses
 
 The decor is blank
 
 The behaviour of my enemies :
-    - They are following the Hero to hit him
-    - When they are close, the speed increase
-    - Every 10 kill a pair of bosses spawn
-    - The Enemy boss drop bonuses
+- They are following the Hero to hit him
+- When they are close, the speed increase
+- Every 10 kill a pair of bosses spawn
+- The Enemy boss drop bonuses
 
 My hero can:
-    - Move up / down / right / left
-    - rotate
-    - shoot
-    - switch weapons
+- Move up / down / right / left
+- rotate
+- shoot
+- switch weapons
 
 I win if i reach 100 kills
 
