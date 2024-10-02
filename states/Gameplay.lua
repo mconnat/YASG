@@ -94,7 +94,7 @@ function Gameplay:update(dt)
         table.insert(Enemies, Boss:new())
         table.insert(Enemies, Boss:new())
         GameplayManager.canSpawnBoss = false
-        GameplayManager.maxEnemyNumber = GameplayManager.maxEnemyNumber + 20
+        GameplayManager.maxEnemyNumber = GameplayManager.maxEnemyNumber + 10
     end
     if GameplayManager.score % GameplayManager.spawnBossKillThreshold ~= 0 then
         GameplayManager.canSpawnBoss = true
