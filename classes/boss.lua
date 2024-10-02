@@ -9,7 +9,8 @@ function Boss:new(x, y)
     setmetatable(instance, { __index = Boss })
     instance.currentHealthPoint = 10
     instance.maxHealthPoint = 10
-    instance.speed = 80
+    instance.speed = 60
+    instance.runSpeed = 200
     instance.image = love.graphics.newImage("assets/sprites/Boss.png")
     instance.radius = instance.image:getWidth() / 2
 
